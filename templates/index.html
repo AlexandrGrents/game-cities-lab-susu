@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" href="../static/favicon.ico" type="image/ico">
+    <title>Game "Cities"</title>
+    <style>
+    	body
+    	{
+    		display: flex;
+    		flex-direction: column;
+    		align-items: center;
+    		justify-content: center;
+    		min-height: 100vh;
+    	}
+    	#game {background: #eee; padding: 50px; border-radius: 20px; border: 3px solid #000;}
+    	[hidden] {display: none;}
+    	span{
+    		text-weight: bold;
+    		color: #f00;
+    	}
+    	label
+    	{
+    		text-weight: bold;
+    		color: #00f;
+    	}
+    	.active-user
+    	{
+    		text-weight: bold;
+    		color: #cf4444;
+
+    	}
+    </style>
+</head>
+<body>
+	
+	<section id="enter-username">
+		<input type="text" id="username">
+		<button>Ввести имя</button>
+	</section>
+	<section id="server-url">
+		<input type="text" id="server">
+		<button>Подтвердить</button>
+	</section>	
+	<main id="game">
+		<div id="info">
+			<p>Username: <label id="player-username"></label></p>
+		</div>
+		<input type="text" id="city">
+		<button>Ввести город</button>
+		<hr>
+		<b>Time</b>
+		<time id="timer">2:00</time>
+
+		<hr>
+		<h4>Users</h4>
+		<ul id="users">
+			
+		</ul>
+		<hr>
+		<h4>Cities</h4>
+		<div id="cities"></div>
+
+	</main>
+	<script src="../static/script.js"></script>
+</body>
+</html>
