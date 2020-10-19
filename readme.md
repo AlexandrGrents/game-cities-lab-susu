@@ -1,1 +1,1 @@
-[Ссылка на развернутую версию](https://lab-susu-grentsav-game-cities.herokuapp.com/)
+[Ссылка на развернутую версию](https://game-cites-lab-grentsav.herokuapp.com/)
