@@ -8,8 +8,10 @@ jsonrpc = JSONRPC(service_url='/api', enable_web_browsable_api = False)
 rooms = [{
     'users': [],
     'cities':['Астана', 'Архангельск', 'Коркино'],
+    'active':0
 }]
 users = []
+
 
 @jsonrpc.method('game.getUsername')
 def check_username() -> str:
@@ -31,9 +33,16 @@ def app_print(name: str) -> str:
 def set_username(username: str) -> None:
     if username in users:
         raise ValueError
-    else:
-        session['username'] = username
-        users.append(username)
+
+    session['username'] = username
+    users.append(username)
+    for i in range(len(rooms)):
+        if len(rooms[i]['users'])<5:
+            rooms[i]['users'].append(username)
+            return None
+    rooms.append({'cities': ['Астана'], 'users': [username], 'active': 0})
+    return None
+
 
 @jsonrpc.method('room.connect')
 def connect(username: str) -> list:
@@ -41,16 +50,38 @@ def connect(username: str) -> list:
         rooms[0]['users'].append(username)
     return rooms[0]['users']
 
+
+@jsonrpc.method('room.view')
+def view(username:str) -> dict:
+    for i in range(len(rooms)):
+        if username in rooms[i]['users']:
+            return rooms[i]
+    return {}
+
+
+@jsonrpc.method('room.out')
+def out(username: str) -> None:
+    for i in range(len(rooms)):
+        if username in rooms[i]['users']:
+            rooms[i]['users'].remove(username)
+            users.remove(username)
+            return None
+    return None
+
+
 @jsonrpc.method('room.city')
 def add_city(username: str, city: str) -> None:
     print(username, city)
     for i in range(len(rooms)):
         if username in rooms[i]['users']:
+            if rooms[i]['users'].index(username) != rooms[i]['active']:
+                raise ValueError
             if city in rooms[i]['cities']:
                 raise ValueError
             print(city.lower(), rooms[i]['cities'][-1].lower()[::-1])
             if city.lower()[0] == rooms[i]['cities'][-1].lower()[::-1][0]:
                 rooms[i]['cities'].append(city)
+                rooms[i]['active'] = (rooms[i]['active'] + 1) % len(rooms[i]['users'])
                 print('city is correct')
                 return None
             print('city is not correct')

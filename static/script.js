@@ -172,11 +172,22 @@ class Application
 
 	async render()
 	{
-		let response = await this.sendRequest('cities.all', {username: this.username}, this.username);
-		console.log(response);
-		let cities = (await response.json())['result'];
-		console.log(cities);
+		if (this.state !== STATE.GAME) return;
+		let response = await this.sendRequest('room.view', {username: this.username}, this.username);
+		let result = (await response.json())['result'];
+		let cities = result['cities'];
+		let usernames = result['users'];
+		let activeUser = result['active']
+
+		console.log(result);
+		this.renserUsers(usernames);
 		this.renderCities(cities);
+		this.showActiveUser(activeUser);
+	}
+
+	async out()
+	{
+		this.sendRequest('room.out', {username: this.username}, this.username)
 	}
 
 	renderCities(cities)
@@ -193,7 +204,7 @@ class Application
 	}
 	renserUsers(usernames)
 	{
-		for (let user of this.usersField.children) user.remove();
+		for (let i= this.usersField.children.length-1; i>=0; i--) this.usersField.children[i].remove();
 		let li;
 		for (let username of usernames)
 		{
@@ -202,8 +213,16 @@ class Application
 			this.usersField.append(li);
 		}
 	}
-	showActiveUser()
+	showActiveUser(activeUser = null)
 	{
+		if (activeUser !== null) {
+			this.timerValue = 240;
+			this.activeUser = activeUser;
+		}
+		console.log(this.activeUser)
+		console.log(this.usersField)
+		console.log(this.usersField.children)
+		console.log(this.usersField.children[0].classList)
 		for (let user of this.usersField.children) user.classList.remove('active-user');
 		this.usersField.children[this.activeUser].classList.add('active-user');
 	}
